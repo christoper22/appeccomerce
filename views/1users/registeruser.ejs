@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>register</title>
+</head>
+<body>
+    <h1>register</h1>
+    <form action="/ecommerce/users" method="POST">
+        <label for="username">username</label>
+        <input type="text" name="username" id="username">
+        <label for="name">name</label>
+        <input type="text" name="name" id="name">
+        <label for="password">password</label>
+        <input type="password" name="password" id="password">
+        <label for="email">email</label>
+        <input type="email" name="email" id="email">
+        <label for="notelp">no-telp</label>
+        <input type="text" name="notelp" id="notelp">
+        <label for="status">user-status</label>
+        <select id="status" name="status">
+          <option value="buyer">buyer</option>
+          <option value="seller">Seller</option>
+          <option value="admin">admin</option>
+        </select>
+        <button>register</button>
+    </form>
+    <a href="/ecommerce/users/login">back to login</a>
+</body>
+</html>

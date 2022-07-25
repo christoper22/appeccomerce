@@ -1,0 +1,28 @@
+{
+  "name": "project",
+  "version": "1.0.0",
+  "description": "App-Ecommerce",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "Ecommerce"
+  ],
+  "author": "christoper febian wijaya",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^16.0.1",
+    "ejs": "^3.1.8",
+    "express": "^4.18.1",
+    "express-group-routes": "^1.1.0",
+    "method-override": "^3.0.0",
+    "pg": "^8.7.3",
+    "pg-hstore": "^2.3.4",
+    "sequelize": "^6.21.3",
+    "winston": "^3.8.1"
+  },
+  "devDependencies": {
+    "sequelize-cli": "^6.4.1"
+  }
+}
