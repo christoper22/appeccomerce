@@ -4,8 +4,9 @@ const { Users, Items, Orders, OrderItem } = require('../db/models/index')
 const getItems = async (req, res, next) => {
     try {
         const allItems = await Items.findAll({})
+        
         console.log(allItems)
-        res.status(200).send(allItems)
+        res.status(200).json(allItems)
 
     } catch (error) {
         next(Error)
@@ -70,11 +71,18 @@ const addItem = async (req, res, next) => {
 const updateItem = async (req, res, next) => {
 
     try {
+        const body = req.body
         const item = await Items.findByPk(req.params.iditem)
-        await item.set({ ...item, ...req.body })
+        await item.set({ ...item, ...body })
         await item.save()
         return res.status(200).json({
-            message: 'item berhasil diupdate'
+            message: 'item berhasil diupdate',
+            Data: {
+                name: item.name,
+                codes: item.code,
+                price: item.price,
+                totalItems: item.totalItems
+            }
         })
     } catch (error) {
         next(error)
