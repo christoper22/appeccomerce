@@ -27,8 +27,8 @@ module.exports = {
           allowNull: false
         },
         status: {
-          type: Sequelize.BOOLEAN,
-          allowNull: false
+          type: Sequelize.ENUM,
+          values: ['PAID', 'CANCEL', 'PENDING'],
         },
         createdAt: {
           type: Sequelize.DATE

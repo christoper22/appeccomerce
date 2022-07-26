@@ -1,4 +1,4 @@
-const { Users, Items, Orders,OrderItem } = require('../db/models/schemas')
+const { Users, Items, Orders,OrderItem } = require('../db/models/index')
 
 
 const getOrders = async (req, res, next) => {
