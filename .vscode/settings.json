@@ -1,0 +1,5 @@
+{
+    "conventionalCommits.scopes": [
+        "add order and orderitems"
+    ]
+}

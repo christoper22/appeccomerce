@@ -4,30 +4,30 @@ const Orders = require('./order');
 const OrderItem = require('./orderItem');
 const connection = require('./sequelize');
 
-  Users.hasMany(Orders, { as: "orders" });
+  Users.hasMany(Orders, { as:"orders",foreignKey: "userId"});
 
 
   Orders.belongsTo(Users, {
     as: "user",
-    foreignKey: "id",
+    foreignKey: "userId",
   
   });
   Orders.belongsToMany(Items, {
     through: "orderItems",
-    as: "orderId",
-    foreignKey: "id"
+    as: "item",
+    foreignKey: "orderId"
   });
 
 
   Items.belongsToMany(Orders, {
     through: "orderItems",
-    as: "itemId",
-    foreignKey: "id"
+    as: "order",
+    foreignKey: "itemId"
   });
 
 
-  OrderItem.belongsTo(Orders, { foreignKey: "id",as:"order"})
-  OrderItem.belongsTo(Items, { foreignKey: "id",as:"item" })
+  OrderItem.belongsTo(Orders, { foreignKey: "orderId",as:"order"})
+  OrderItem.belongsTo(Items, { foreignKey: "itemId",as:"item" })
 
 module.exports = {
   connection,

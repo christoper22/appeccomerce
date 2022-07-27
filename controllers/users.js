@@ -1,5 +1,6 @@
 const { Users, Items, Orders, OrderItem } = require('../db/models/index')
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
 const getUsers = async (req, res, next) => {
     try {
@@ -7,7 +8,7 @@ const getUsers = async (req, res, next) => {
         // console.log(body)
         const searchUser = await Users.findOne({ where: { userName: req.body.userName } })
         console.log(searchUser)
-
+        
         // console.log(searchUser.userid)
         if (searchUser == null) {
             return res.status(201).json({
@@ -17,8 +18,16 @@ const getUsers = async (req, res, next) => {
         const matchPassword = bcrypt.compareSync(body.password, searchUser.password)
         // console.log(matchPassword)
 
-
         if (matchPassword) {
+            // const token = jwt.sign(
+            //     { userName: searchUser.userName},
+            //     process.env.TOKEN_KEY,
+            //     {
+            //       expiresIn: "2h",
+            //     }
+            //   );
+            // searchUser.token = token
+            // console.log(searchUser.token)
             return res.status(201).json({
                 message: `hello ${searchUser.name},succes login`,
             })
