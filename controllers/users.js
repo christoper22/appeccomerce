@@ -18,7 +18,7 @@ const getUsers = async (req, res, next) => {
         const matchPassword = bcrypt.compareSync(body.password, searchUser.password)
         // console.log(matchPassword)
 
-        if (matchPassword) {
+        if (matchPassword === true) {
             // const token = jwt.sign(
             //     { userName: searchUser.userName},
             //     process.env.TOKEN_KEY,
