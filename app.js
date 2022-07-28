@@ -12,7 +12,7 @@ const userRouter = require('./routes/users');
 const itemRouter = require('./routes/items');
 const orderRouter = require('./routes/orders');
 //handler err
-const logger = require('./errorhandler/error')
+const logger = require('./middleware/errorhandler/error')
 // app.engine('ejs', ejsMate)
 
 app.set('view engine', 'ejs');

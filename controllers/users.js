@@ -1,3 +1,4 @@
+require('dotenv').config()
 const { Users, Items, Orders, OrderItem } = require('../db/models/index')
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
@@ -19,16 +20,16 @@ const getUsers = async (req, res, next) => {
         // console.log(matchPassword)
 
         if (matchPassword === true) {
-            // const token = jwt.sign(
-            //     { userName: searchUser.userName},
-            //     process.env.TOKEN_KEY,
-            //     {
-            //       expiresIn: "2h",
-            //     }
-            //   );
-            // searchUser.token = token
-            // console.log(searchUser.token)
-            return res.status(201).json({
+            const token = jwt.sign(
+                { userName: searchUser.userName},
+                process.env.Secret_Token,
+                // {
+                //   expiresIn: "2h",
+                // }
+              );
+             
+            console.log(token)
+            return res.header('secret-token',token).status(201).json({
                 message: `hello ${searchUser.name},succes login`,
             })
         } else {
@@ -94,6 +95,7 @@ const addUser = async (req, res, next) => {
         })
 
     } catch (error) {
+        console.log(error)
         next(error)
     }
 }
