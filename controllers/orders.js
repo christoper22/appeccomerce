@@ -202,9 +202,38 @@ const deleteOrder = async (req, res, next) => {
     }
 }
 
+const statusChange = async (req, res, next) => {
+
+    try {
+        const user = await Users.findByPk(req.params.id)
+        if (!user) {
+            return res.status(200).json({
+                message: 'user not found'
+            })
+        } else {
+            const idOrder = req.params.idorder
+            const order = await Orders.findByPk(idOrder);
+            if (!order) {
+                return res.status(200).json({
+                    message: 'order not found'
+                })
+            } else {
+                const statusChange = req.params.status.toUpperCase()
+                order.update({ status: statusChange })
+                return res.status(200).json({
+                    message: `order is ${statusChange}`
+                })
+            }
+        }
+    } catch (error) {
+        next(error)
+    }
+}
+
 module.exports = {
     getOrders,
     addOrder,
     updateOrder,
-    deleteOrder
+    deleteOrder,
+    statusChange
 }
