@@ -12,7 +12,7 @@ const getUsers = async (req, res, next) => {
 
         // console.log(searchUser.userid)
         if (searchUser == null) {
-            return res.status(201).json({
+            return res.status(401).json({
                 message: 'username notfound!!'
             })
         }
@@ -104,7 +104,7 @@ const updateUser = async (req, res, next) => {
     try {
         const user = await Users.findByPk(req.params.id)
         if (!user) {
-            return res.status(200).json({
+            return res.status(400).json({
                 message: 'user not found'
             })
         } else {
@@ -137,7 +137,7 @@ const deleteUser = async (req, res, next) => {
     try {
         const user = await Users.findByPk(req.params.id)
         if (!user) {
-            return res.status(200).json({
+            return res.status(400).json({
                 message: 'user not found'
             })
         } else {

@@ -18,7 +18,7 @@ const addItem = async (req, res, next) => {
     try {
         const user = await Users.findByPk(req.params.id)
         if (!user) {
-            return res.status(200).json({
+            return res.status(400).json({
                 message: 'user not found'
             })
         } else {
@@ -55,7 +55,7 @@ const addItem = async (req, res, next) => {
             console.log(allItems.length)
             console.log(problem)
             if (allItems.length === 0) {
-                return res.status(201).json({
+                return res.status(401).json({
                     message: `please input different item, your item name ${problem} has been add`
                 })
             } else if (problem.length !== 0) {
@@ -79,13 +79,13 @@ const updateItem = async (req, res, next) => {
     try {
         const user = await Users.findByPk(req.params.id)
         if (!user) {
-            return res.status(200).json({
+            return res.status(400).json({
                 message: 'user not found'
             })
         } else {
             const item = await Items.findByPk(req.params.iditem)
             if (!item) {
-                return res.status(200).json({
+                return res.status(400).json({
                     message: 'item not found'
                 })
             } else {
@@ -112,13 +112,13 @@ const deleteItem = async (req, res, next) => {
     try {
         const user = await Users.findByPk(req.params.id)
         if (!user) {
-            return res.status(200).json({
+            return res.status(400).json({
                 message: 'user not found'
             })
         } else {
             const item = await Items.findByPk(req.params.iditem)
             if (!item) {
-                return res.status(200).json({
+                return res.status(400).json({
                     message: 'item not found'
                 })
             } else {

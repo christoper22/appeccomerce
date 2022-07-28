@@ -1,10 +1,10 @@
-const { Users, Items, Orders, OrderItem } = require('../db/models/index')
+const { Users, Items, Orders, OrderItem,connection } = require('../db/models/index')
 
 
 const getOrders = async (req, res, next) => {
     const user = await Users.findByPk(req.params.id)
     if (!user) {
-        return res.status(200).json({
+        return res.status(400).json({
             message: 'user not found'
         })
     } else {
@@ -20,7 +20,7 @@ const addOrder = async (req, res, next) => {
     try {
         const user = await Users.findByPk(req.params.id)
         if (!user) {
-            return res.status(200).json({
+            return res.status(400).json({
                 message: 'user not found'
             })
         } else {
@@ -34,23 +34,29 @@ const addOrder = async (req, res, next) => {
                     message: 'add items'
                 })
             } else {
-                const order = await Orders.create({//create order
-                    userId: req.params.id,
-                    totalPrice: 0,
-                    status: body.status
-                });
-                // console.log(order)
-                const totalPrice = []
-                for (let i = 0; i < items.length; i++) {
-                    const item = await Items.findOne({ where: { name: items[i].name } })//search all items
-                    // console.log(item.id)
-                    const orderItem = await OrderItem.create({ orderId: order.id, itemId: item.id, price: item.price, totalItem: items[i].totalItem }) //create order item
-                    const totalPriceOrder = orderItem.price * orderItem.totalItem
-                    await totalPrice.push(totalPriceOrder)//push item price to total price
-                    const updateTotalItem = item.totalItems - orderItem.totalItem
-                    item.update({ totalItems: updateTotalItem })
-                }
-                // console.log(totalPrice)
+                    const order = await Orders.create({//create order
+                        userId: req.params.id,
+                        totalPrice: 0,
+                        status: body.status
+                    });
+                    // console.log(order)
+                    const totalPrice = []
+                    for (let i = 0; i < items.length; i++) {
+                        const item = await Items.findOne({ where: { name: items[i].name } })//search all items
+                        // console.log(item.id)
+                        const orderItem = await OrderItem.create({
+                            orderId: order.id,
+                            itemId: item.id,
+                            price: item.price,
+                            totalItem: items[i].totalItem
+                        }) //create order item
+                        const totalPriceOrder = orderItem.price * orderItem.totalItem
+                        await totalPrice.push(totalPriceOrder)//push item price to total price
+                        const updateTotalItem = item.totalItems - orderItem.totalItem
+                        item.update({ totalItems: updateTotalItem })
+                    }
+                    // console.log(totalPrice)
+                
                 let sum = 0;
 
                 for (let i = 0; i < totalPrice.length; i++) {
@@ -86,14 +92,14 @@ const updateOrder = async (req, res, next) => {
     try {
         const user = await Users.findByPk(req.params.id)
         if (!user) {
-            return res.status(200).json({
+            return res.status(400).json({
                 message: 'user not found'
             })
         } else {
             const idOrder = req.params.idorder
             const order = await Orders.findByPk(idOrder);
             if (!order) {
-                return res.status(200).json({
+                return res.status(400).json({
                     message: 'order not found'
                 })
             } else {
@@ -172,14 +178,14 @@ const deleteOrder = async (req, res, next) => {
     try {
         const user = await Users.findByPk(req.params.id)
         if (!user) {
-            return res.status(200).json({
+            return res.status(400).json({
                 message: 'user not found'
             })
         } else {
             const idOrder = req.params.idorder
             const order = await Orders.findByPk(idOrder)
             if (!order) {
-                return res.status(200).json({
+                return res.status(400).json({
                     message: 'order not found'
                 })
             } else { 
@@ -207,14 +213,14 @@ const statusChange = async (req, res, next) => {
     try {
         const user = await Users.findByPk(req.params.id)
         if (!user) {
-            return res.status(200).json({
+            return res.status(400).json({
                 message: 'user not found'
             })
         } else {
             const idOrder = req.params.idorder
             const order = await Orders.findByPk(idOrder);
             if (!order) {
-                return res.status(200).json({
+                return res.status(400).json({
                     message: 'order not found'
                 })
             } else {
