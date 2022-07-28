@@ -26,7 +26,7 @@ module.exports = {
           allowNull: false
         },
         totalItems: {
-          type: Sequelize.STRING,
+          type: Sequelize.INTEGER,
           allowNull: false
         },
         createdAt: {

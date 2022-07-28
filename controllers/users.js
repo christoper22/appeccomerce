@@ -8,7 +8,7 @@ const getUsers = async (req, res, next) => {
         // console.log(body)
         const searchUser = await Users.findOne({ where: { userName: req.body.userName } })
         console.log(searchUser)
-        
+
         // console.log(searchUser.userid)
         if (searchUser == null) {
             return res.status(201).json({
@@ -101,18 +101,30 @@ const addUser = async (req, res, next) => {
 const updateUser = async (req, res, next) => {
     try {
         const user = await Users.findByPk(req.params.id)
-        const body = req.body
-        const hasedPassword = bcrypt.hashSync(body.password, 12)
-        const newPassword = { "password": hasedPassword }
-        const newBody = { ...body, ...newPassword }
-        // console.log(newBody)
-        await user.set({ ...user, ...newBody })
-        await user.save()
+        if (!user) {
+            return res.status(200).json({
+                message: 'user not found'
+            })
+        } else {
+            const body = req.body
+            const hasedPassword = bcrypt.hashSync(body.password, 12)
+            const newPassword = { "password": hasedPassword }
+            const newBody = { ...body, ...newPassword }
+            // console.log(newBody)
+            await user.set({ ...user, ...newBody })
+            await user.save()
 
-        // console.log(user)
-        return res.status(200).json({
-            message: 'user berhasil diupdate'
-        })
+            // console.log(user)
+            return res.status(200).json({
+                message: 'user berhasil diupdate',
+                data: {
+                    username: user.userName,
+                    name: user.name,
+                    email: user.email,
+                    phone: user.phone
+                }
+            })
+        }
     } catch (error) {
         next(error)
     }

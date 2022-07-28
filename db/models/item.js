@@ -25,7 +25,7 @@ Items.init({
         allowNull: false
       },
       totalItems: {
-        type: DataTypes.STRING,
+        type: DataTypes.INTEGER,
         allowNull: false
       }
 }, {

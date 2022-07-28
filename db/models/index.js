@@ -26,8 +26,8 @@ const connection = require('./sequelize');
   });
 
 
-  OrderItem.belongsTo(Orders, { foreignKey: "orderId",as:"order"})
-  OrderItem.belongsTo(Items, { foreignKey: "itemId",as:"item" })
+  OrderItem.belongsTo(Orders, { foreignKey: "orderId",as:"item"})
+  OrderItem.belongsTo(Items, { foreignKey: "itemId",as:"order" })
 
 module.exports = {
   connection,
