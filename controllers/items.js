@@ -3,9 +3,9 @@ const { Users, Items, Orders, OrderItem } = require('../db/models/index')
 
 const getItems = async (req, res, next) => {
     try {
-        const allItems = await Items.findAll({})
+        const allItems = await Items.findAll({attributes:['name','codes','price','totalItems']  })
 
-        console.log(allItems)
+        // console.log(allItems)
         res.status(200).json(allItems)
 
     } catch (error) {
@@ -16,12 +16,12 @@ const getItems = async (req, res, next) => {
 
 const addItem = async (req, res, next) => {
     try {
-        const user = await Users.findByPk(req.params.id)
-        if (!user) {
-            return res.status(400).json({
-                message: 'user not found'
-            })
-        } else {
+        // const user = await Users.findByPk(req.params.id)
+        // if (!user) {
+        //     return res.status(400).json({
+        //         message: 'user not found'
+        //     })
+        // } else {
             const body = req.body
             // console.log(body)
             const allItems = []
@@ -67,7 +67,7 @@ const addItem = async (req, res, next) => {
                     message: `success create item ${allItems} `
                 })
             }
-        }
+        // }
     } catch (error) {
         next(error)
     }
@@ -77,12 +77,12 @@ const addItem = async (req, res, next) => {
 const updateItem = async (req, res, next) => {
 
     try {
-        const user = await Users.findByPk(req.params.id)
-        if (!user) {
-            return res.status(400).json({
-                message: 'user not found'
-            })
-        } else {
+        // const user = await Users.findByPk(req.params.id)
+        // if (!user) {
+        //     return res.status(400).json({
+        //         message: 'user not found'
+        //     })
+        // } else {
             const item = await Items.findByPk(req.params.iditem)
             if (!item) {
                 return res.status(400).json({
@@ -102,7 +102,7 @@ const updateItem = async (req, res, next) => {
                     }
                 })
             }
-        }
+        // }
     } catch (error) {
         next(error)
     }
@@ -110,12 +110,12 @@ const updateItem = async (req, res, next) => {
 
 const deleteItem = async (req, res, next) => {
     try {
-        const user = await Users.findByPk(req.params.id)
-        if (!user) {
-            return res.status(400).json({
-                message: 'user not found'
-            })
-        } else {
+        // const user = await Users.findByPk(req.params.id)
+        // if (!user) {
+        //     return res.status(400).json({
+        //         message: 'user not found'
+        //     })
+        // } else {
             const item = await Items.findByPk(req.params.iditem)
             if (!item) {
                 return res.status(400).json({
@@ -127,7 +127,7 @@ const deleteItem = async (req, res, next) => {
                     message: 'success remove items'
                 })
             }
-        }
+        // }
     } catch (error) {
         next(error)
     }

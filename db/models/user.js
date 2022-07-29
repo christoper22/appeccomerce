@@ -13,7 +13,7 @@ Users.init({
   },
   userName: {
     type: DataTypes.STRING,
-    unique: true,
+    unique:true,
     allowNull: false
   },
   name: {
@@ -35,12 +35,16 @@ Users.init({
     unique: true,
     allowNull: false
   },
-  status: {
-    type: DataTypes.STRING
+  roleId: {
+    type: DataTypes.INTEGER,
+    references: {
+      model: "roles",
+      key:"id"
+    },
+    onUpdate:"CASCADE",
+    onDelete: "CASCADE",
+    allowNull: false
   },
-  // token: {
-  //   type: DataTypes.STRING
-  // }
 }, {
   sequelize: connection,
   timestamp: true,

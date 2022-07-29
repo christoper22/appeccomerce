@@ -1,5 +1,5 @@
 require('dotenv').config()
-const { Users, Items, Orders, OrderItem } = require('../db/models/index')
+const { Users, Items, Orders, OrderItem,Roles } = require('../db/models/index')
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
@@ -7,8 +7,8 @@ const getUsers = async (req, res, next) => {
     try {
         const body = req.body
         // console.log(body)
-        const searchUser = await Users.findOne({ where: { userName: req.body.userName } })
-        console.log(searchUser)
+        const searchUser = await Users.findOne({ where: { userName: req.body.userName },include:[{model:Roles,as:"role",attributes:['name']}]})
+        // console.log(searchUser)
 
         // console.log(searchUser.userid)
         if (searchUser == null) {
@@ -16,6 +16,7 @@ const getUsers = async (req, res, next) => {
                 message: 'username notfound!!'
             })
         }
+        // console.log(searchUser)
         const matchPassword = bcrypt.compareSync(body.password, searchUser.password)
         // console.log(matchPassword)
 
@@ -28,9 +29,16 @@ const getUsers = async (req, res, next) => {
                 // }
               );
              
-            console.log(token)
+            // console.log(token)
             return res.header('secret-token',token).status(201).json({
                 message: `hello ${searchUser.name},succes login`,
+                data: {
+                    userName: searchUser.userName,
+                    email: searchUser.email,
+                    phone: searchUser.phone,
+                    role: searchUser.role.name,
+                    token:token
+                }
             })
         } else {
             return res.status(401).json({
@@ -38,7 +46,7 @@ const getUsers = async (req, res, next) => {
             })
         }
     } catch (error) {
-        console.log(error)
+        // console.log(error)
         next(error)
     }
 
@@ -48,29 +56,29 @@ const getUsers = async (req, res, next) => {
 const addUser = async (req, res, next) => {
     try {
         const body = req.body
+        const role = await Roles.findOne({where: { name:body.role}})
+        // const isUserExist = await Users.findOne({
+        //     where: {
+        //         userName: body.userName
+        //     }
+        // })
+        // const isEmailExist = await Users.findOne({
+        //     where: {
+        //         email: body.email
+        //     }
+        // })
 
-        const isUserExist = await Users.findOne({
-            where: {
-                userName: body.userName
-            }
-        })
-        const isEmailExist = await Users.findOne({
-            where: {
-                email: body.email
-            }
-        })
-
-        if (isUserExist) {
-            throw {
-                code: 400,
-                message: 'username already exist'
-            }
-        } else if (isEmailExist) {
-            throw {
-                code: 400,
-                message: 'Email already exist'
-            }
-        }
+        // if (isUserExist) {
+        //     throw {
+        //         code: 400,
+        //         message: 'username already exist'
+        //     }
+        // } else if (isEmailExist) {
+        //     throw {
+        //         code: 400,
+        //         message: 'Email already exist'
+        //     }
+        // }
 
         const hasedPassword = bcrypt.hashSync(body.password, 12)
 
@@ -80,9 +88,9 @@ const addUser = async (req, res, next) => {
             password: hasedPassword,
             name: body.name,
             phone: body.phone,
-            status: body.status
+            roleId: role.id
         })
-        console.log(body)
+        // console.log(body)
 
         return res.status(200).json({
             code: 200,
@@ -95,7 +103,7 @@ const addUser = async (req, res, next) => {
         })
 
     } catch (error) {
-        console.log(error)
+        // console.log(error)
         next(error)
     }
 }
@@ -103,11 +111,11 @@ const addUser = async (req, res, next) => {
 const updateUser = async (req, res, next) => {
     try {
         const user = await Users.findByPk(req.params.id)
-        if (!user) {
-            return res.status(400).json({
-                message: 'user not found'
-            })
-        } else {
+        // if (!user) {
+        //     return res.status(400).json({
+        //         message: 'user not found'
+        //     })
+        // } else {
             const body = req.body
             const hasedPassword = bcrypt.hashSync(body.password, 12)
             const newPassword = { "password": hasedPassword }
@@ -126,7 +134,7 @@ const updateUser = async (req, res, next) => {
                     phone: user.phone
                 }
             })
-        }
+        // }
     } catch (error) {
         next(error)
     }
@@ -136,16 +144,16 @@ const updateUser = async (req, res, next) => {
 const deleteUser = async (req, res, next) => {
     try {
         const user = await Users.findByPk(req.params.id)
-        if (!user) {
-            return res.status(400).json({
-                message: 'user not found'
-            })
-        } else {
+        // if (!user) {
+        //     return res.status(400).json({
+        //         message: 'user not found'
+        //     })
+        // } else {
             user.destroy()
             return res.status(200).json({
                 message: 'success remove user'
             })
-        }
+        // }
 
     } catch (error) {
         next(error)

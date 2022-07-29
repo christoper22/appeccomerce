@@ -19,7 +19,8 @@ module.exports = {
             key:"id"
           },
           onUpdate: "CASCADE",
-          onDelete:"CASCADE"
+          onDelete: "CASCADE",
+          allowNull: false
         },
         itemId: {
           type: Sequelize.INTEGER,
@@ -28,13 +29,18 @@ module.exports = {
             key:"id"
           },
           onUpdate: "CASCADE",
-          onDelete:"CASCADE"
+          onDelete: "CASCADE",
+          allowNull: false
         },
         price: {
           type: Sequelize.INTEGER,
           allowNull: false
         },
         totalItem: {
+          type: Sequelize.INTEGER,
+          allowNull: false
+        },
+        total: {
           type: Sequelize.INTEGER,
           allowNull: false
         },

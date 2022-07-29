@@ -37,6 +37,10 @@ OrderItem.init({
   totalItem: {
     type: DataTypes.INTEGER,
     allowNull: false
+  },
+  total: {
+    type: Sequelize.INTEGER,
+    allowNull: false
   }
 },
   {

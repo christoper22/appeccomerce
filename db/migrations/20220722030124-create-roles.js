@@ -3,7 +3,7 @@
 module.exports = {
   async up (queryInterface, Sequelize) {
      await queryInterface.createTable(
-      'items',
+      'roles',
       { 
         id: {
           type: Sequelize.INTEGER,
@@ -16,17 +16,9 @@ module.exports = {
           type: Sequelize.STRING,
           allowNull: false
         },
-        codes: {
-          type: Sequelize.STRING,
-          allowNull: false
-        },
-        price: {
-          type: Sequelize.INTEGER,
-          allowNull: false
-        },
-        totalItems: {
-          type: Sequelize.INTEGER,
-          allowNull: false
+        status: {
+          type: Sequelize.ENUM,
+          values: ['ACTIVE','NONACTIVE'],
         },
         createdAt: {
           type: Sequelize.DATE
@@ -42,6 +34,6 @@ module.exports = {
   },
 
   async down (queryInterface, Sequelize) {
-    await queryInterface.dropTable('items');
+    await queryInterface.dropTable('roles');
   }
 };

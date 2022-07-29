@@ -2,8 +2,12 @@ const Users = require('./user');
 const Items = require('./item');
 const Orders = require('./order');
 const OrderItem = require('./orderItem');
+const Roles = require('./roles');
 const connection = require('./sequelize');
 
+  Roles.hasMany(Users,{as:"users",foreignKey:"roleId"})
+
+  Users.belongsTo(Roles,{as:"role",foreignKey:"roleId"})
   Users.hasMany(Orders, { as:"orders",foreignKey: "userId"});
 
 
@@ -18,6 +22,12 @@ const connection = require('./sequelize');
     foreignKey: "orderId"
   });
 
+  Orders.hasMany(OrderItem, {
+    as: "order",
+    foreignKey:"orderId"
+  })
+  
+
 
   Items.belongsToMany(Orders, {
     through: "orderItems",
@@ -25,14 +35,19 @@ const connection = require('./sequelize');
     foreignKey: "itemId"
   });
 
+  Items.hasMany(OrderItem,{
+    as: "item",
+    foreignKey:"itemId"
+  })
 
-  OrderItem.belongsTo(Orders, { foreignKey: "orderId",as:"item"})
-  OrderItem.belongsTo(Items, { foreignKey: "itemId",as:"order" })
+  OrderItem.belongsTo(Orders, { foreignKey: "orderId",as:"order"})
+  OrderItem.belongsTo(Items, { foreignKey: "itemId",as:"item" })
 
 module.exports = {
   connection,
   Users,
   Items,
   Orders,
-  OrderItem
+  OrderItem,
+  Roles
   }

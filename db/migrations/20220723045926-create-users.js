@@ -14,7 +14,6 @@ module.exports = {
         },
         userName: {
           type: Sequelize.STRING,
-          unique: true,
           allowNull: false
         },
         name: {
@@ -34,8 +33,15 @@ module.exports = {
           type: Sequelize.STRING,
           allowNull: false
         },
-        status: {
-          type: Sequelize.STRING
+        roleId: {
+          type: Sequelize.INTEGER,
+          references: {
+            model: "roles",
+            key:"id"
+          },
+          onUpdate:"CASCADE",
+          onDelete: "CASCADE",
+          allowNull: false
         },
         createdAt: {
           type: Sequelize.DATE

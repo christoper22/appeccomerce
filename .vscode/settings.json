@@ -1,5 +1,6 @@
 {
     "conventionalCommits.scopes": [
-        "add order and orderitems"
+        "add order and orderitems",
+        "add roles colomn and middleware register and verify user in verify token"
     ]
 }

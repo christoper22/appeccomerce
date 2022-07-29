@@ -17,11 +17,11 @@
     format
     {
     "userName" :"ebendc",
-    "name":"christoper",
-    "password":"112233",
+    "name":"christoper febian wijaya",
+    "password":"12345678",
     "email":"dajodjao@gmail.com",
     "phone":"1313141415",
-    "status":"buyer"
+    "role":"member"
     }
 
 3. update user(patch)
@@ -31,10 +31,10 @@
     {
     "userName" :"ebendc",
     "name":"christoper febian wijaya",
-    "password":"222225",
+    "password":"12345678",
     "email":"dajodjao@gmail.com",
     "phone":"1313141415",
-    "status":"buyer"
+    "role":"member"
     }
 4. delete user(delete)
     localhost:8080/ecommerce/users/:id
@@ -45,8 +45,8 @@
 localhost:8080/ecommerce/users/items
 
 2. add item (post)
-localhost:8080/ecommerce/users/:id/items
-id in here is id user
+localhost:8080/ecommerce/users/items
+
 
 format
 [
@@ -119,8 +119,8 @@ format
 ]
 
 3. update item(patch)
-localhost:8080/ecommerce/users/:id/items/:iditem
-id in here is id user
+localhost:8080/ecommerce/users/items/:iditem
+
 
 format
 {
@@ -131,15 +131,17 @@ format
 }
 
 4.delete item(delete)
-localhost:8080/ecommerce/users/:id/items/:iditem
-id in here is id user
+localhost:8080/ecommerce/users/items/:iditem
+
 
 ## order
 1.show order(get)
 localhost:8080/ecommerce/users/:id/orders
+id in here is id user
 
 2.add order(post)
 localhost:8080/ecommerce/users/:id/orders
+id in here is id user
 
 format
 {
@@ -149,6 +151,7 @@ format
 
 3.update order(patch)
 localhost:8080/ecommerce/users/:id/orders/:idorder
+id in here is id user
 format
 {
     "status":"PENDING",
@@ -156,9 +159,11 @@ format
 }
 4.delete order(delete)
 localhost:8080/ecommerce/users/:id/orders/:idorder
+id in here is id user
 
 5.change status(patch)
 localhost:8080/ecommerce/users/:id/orders/:idorder/:status
+id in here is id user
 status is enum use paid or pending or cancel
 
 
