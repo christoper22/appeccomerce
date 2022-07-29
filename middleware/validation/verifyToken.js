@@ -1,4 +1,4 @@
-const { Users, Items, Orders, OrderItem, Roles } = require('../../db/models/index')
+const { Users } = require('../../db/models/index')
 const jwt = require("jsonwebtoken");
 
 async function secret(req, res, next) {
@@ -12,8 +12,8 @@ async function secret(req, res, next) {
 
     try {
         const verifikasi = jwt.verify(token, process.env.Secret_Token)
-        console.log(verifikasi)
-        console.log(verifikasi.userName)
+        // console.log(verifikasi)
+        // console.log(verifikasi.userName)
         const user = await Users.findOne({ where: { userName: verifikasi.userName } })
         if (!user) {
             return res.status(401).json({

@@ -1,4 +1,4 @@
-const { Users, Items, Orders, OrderItem } = require('../db/models/index')
+const {Items} = require('../db/models/index')
 
 
 const getItems = async (req, res, next) => {
@@ -31,7 +31,7 @@ const addItem = async (req, res, next) => {
                     const searchItem = await Items.findOne({ where: { name: body[i].name, codes: body[i].codes } })
                     if (searchItem == null) {
                         const item = await Items.create(body[i]);
-                        console.log(item)
+                        // console.log(item)
                         allItems.push(item.name)
                         // return res.status(201).json({
                         //     message: `success create item ${item.name}`,
@@ -52,8 +52,8 @@ const addItem = async (req, res, next) => {
                 }
             }
             await looping()
-            console.log(allItems.length)
-            console.log(problem)
+            // console.log(allItems.length)
+            // console.log(problem)
             if (allItems.length === 0) {
                 return res.status(401).json({
                     message: `please input different item, your item name ${problem} has been add`

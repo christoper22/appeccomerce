@@ -1,5 +1,5 @@
 require('dotenv').config()
-const { Users, Items, Orders, OrderItem,Roles } = require('../db/models/index')
+const { Users,Roles, Orders, OrderItem,Items } = require('../db/models/index')
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
@@ -149,6 +149,20 @@ const deleteUser = async (req, res, next) => {
         //         message: 'user not found'
         //     })
         // } else {
+        const findOrders = await Orders.findAll({ where: { userId: user.id ,status:"PENDING"} })
+        for (let order of findOrders) { 
+            const orderItemDelete = await OrderItem.findAll({ where: { orderId: order.id } })
+                for (let orderItem of orderItemDelete) {
+                    const item = await Items.findOne({ where: { id: orderItem.itemId } })
+                    const updateTotalItem = (item.totalItems + orderItem.totalItem)
+                    // console.log(updateTotalItem)
+                    // console.log(typeof (item.totalItems))
+                    // console.log(typeof (orderItem.totalItem))
+                    item.update({ totalItems: updateTotalItem })
+                    orderItem.destroy()
+            }
+            order.destroy()
+         }
             user.destroy()
             return res.status(200).json({
                 message: 'success remove user'

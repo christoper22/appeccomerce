@@ -164,8 +164,6 @@ id in here is id user
 5.change status(patch)
 localhost:8080/ecommerce/users/:id/orders/:idorder/:status
 id in here is id user
-status is enum use paid or pending or cancel
-
-
+status is enum use paid or pending 
 
 

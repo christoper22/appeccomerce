@@ -2,6 +2,7 @@ const { Users, Items, Orders, OrderItem, connection } = require('../db/models/in
 
 
 const getOrders = async (req, res, next) => {
+   try {
     const user = await Users.findByPk(req.params.id)
     // console.log(user)
     // if (!user) {
@@ -9,6 +10,7 @@ const getOrders = async (req, res, next) => {
     //         message: 'user not found'
     //     })
     // } else {
+    
     const orders = await Orders.findAll({
         where: { userId: user.id }, include: [
             {
@@ -20,7 +22,7 @@ const getOrders = async (req, res, next) => {
         ,
         attributes: { exclude: ['userId', 'deletedAt'] }
     })
-    console.log(orders)
+    // console.log(orders)
     if (orders.length === 0 ) {
 
         return res.status(201).json({
@@ -28,12 +30,15 @@ const getOrders = async (req, res, next) => {
         })
     }
 
-    console.log(orders[0].user.userName)
+    // console.log(orders[0].user.userName)
     return res.status(201).json({
         message: 'all order',
         data: orders
     })
     // }
+   } catch (error) {
+    next(error)
+   }
 }
 
 const addOrder = async (req, res, next) => {
@@ -63,9 +68,16 @@ const addOrder = async (req, res, next) => {
             // console.log(order)
             const totalPrice = []
             for (let i = 0; i < items.length; i++) {
-                const item = await Items.findOne({ where: { name: items[i].name } })//search all items
+                const item = await Items.findOne({ where: { name: items[i].name } }, { transaction: t })//search all items
+                if (!item) {
+                    return res.status(201).json({
+                        message: 'item not found',
+                    })
+                }
                 const totalPriceItem = items[i].totalItem * item.price
-                console.log(typeof(items.totalitem))
+
+                console.log(item.price)
+                // console.log(typeof(items[i].totalitem))
                 // console.log(item.id)
                 const orderItem = await OrderItem.create({
                     orderId: order.id,
@@ -76,7 +88,7 @@ const addOrder = async (req, res, next) => {
                 }, { transaction: t }) //create order item
 
                 const totalPriceOrder = orderItem.price * orderItem.totalItem
-                await totalPrice.push(totalPriceOrder)//push item price to total price
+                totalPrice.push(totalPriceOrder)//push item price to total price
                 const updateTotalItem = item.totalItems - orderItem.totalItem
                 item.update({ totalItems: updateTotalItem })
             }
@@ -106,7 +118,7 @@ const addOrder = async (req, res, next) => {
         // }
 
     } catch (error) {
-        console.log(error)
+        // console.log(error)
         next(error)
     }
 
@@ -226,7 +238,7 @@ const deleteOrder = async (req, res, next) => {
             if (orderItem == null) {
                 order.destroy()
             } else {
-                const orderItemDelete = await OrderItem.findAll({ where: { orderId: idOrder } })
+                const orderItemDelete = await OrderItem.findAll({ where: { orderId: order.id } })
                 for (let orderItem of orderItemDelete) {
                     const item = await Items.findOne({ where: { id: orderItem.itemId } })
                     const updateTotalItem = (item.totalItems + orderItem.totalItem)
@@ -235,8 +247,8 @@ const deleteOrder = async (req, res, next) => {
                     // console.log(typeof (orderItem.totalItem))
                     item.update({ totalItems: updateTotalItem })
                     orderItem.destroy()
-                    order.destroy()
                 }
+                order.destroy()
             }
 
             return res.status(200).json({
