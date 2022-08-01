@@ -30,20 +30,5 @@ const register = async (req, res, next) => {
 }
 
 
-const users = async (req,res,next) => {
-    try {
-        const userParam = await Users.findByPk(req.params.id)
-        if (!userParam) {
-            throw {
-                code: 400,
-                message: 'user not found'
-            }
-        }
-        next()
-    } catch (error) {
-        next(error)
-    }
-}
-
-module.exports = { register, users }
+module.exports = { register}
    

@@ -20,6 +20,7 @@ async function secret(req, res, next) {
                 message: 'username notfound!!'
             })
         } else {
+            req.userAfterVerifikation = user.id
             next();
         }
     } catch (error) {

@@ -9,29 +9,23 @@ module.exports = {
           type: Sequelize.INTEGER,
           autoIncrement: true,
           primaryKey: true,
-          unique: true,
-          allowNull: false
+          unique: true
         },
         userName: {
-          type: Sequelize.STRING,
-          allowNull: false
+          type: Sequelize.STRING
         },
         name: {
-          type: Sequelize.STRING,
-          allowNull: false
+          type: Sequelize.STRING
         },
         password: {
-          type: Sequelize.STRING,
-          allowNull: false
+          type: Sequelize.STRING
         },
         email: {
           type: Sequelize.STRING,
-          isEmail: true,
-          allowNull: false
+          isEmail: true
         },
         phone: {
-          type: Sequelize.STRING,
-          allowNull: false
+          type: Sequelize.STRING
         },
         roleId: {
           type: Sequelize.INTEGER,
@@ -40,8 +34,7 @@ module.exports = {
             key:"id"
           },
           onUpdate:"CASCADE",
-          onDelete: "CASCADE",
-          allowNull: false
+          onDelete: "CASCADE"
         },
         createdAt: {
           type: Sequelize.DATE

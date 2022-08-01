@@ -13,6 +13,7 @@ Items.init({
       },
       name: {
         type: DataTypes.STRING,
+        unique: true,
         allowNull: false
       },
       codes: {

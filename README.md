@@ -25,7 +25,7 @@
     }
 
 3. update user(patch)
-    localhost:8080/ecommerce/users/:id
+    localhost:8080/ecommerce/users/
 
     format
     {
@@ -37,7 +37,7 @@
     "role":"member"
     }
 4. delete user(delete)
-    localhost:8080/ecommerce/users/:id
+    localhost:8080/ecommerce/users/
 
 ## item
 
@@ -136,12 +136,12 @@ localhost:8080/ecommerce/users/items/:iditem
 
 ## order
 1.show order(get)
-localhost:8080/ecommerce/users/:id/orders
-id in here is id user
+localhost:8080/ecommerce/users/orders
+
 
 2.add order(post)
-localhost:8080/ecommerce/users/:id/orders
-id in here is id user
+localhost:8080/ecommerce/users/orders
+
 
 format
 {
@@ -150,20 +150,19 @@ format
 }
 
 3.update order(patch)
-localhost:8080/ecommerce/users/:id/orders/:idorder
-id in here is id user
+localhost:8080/ecommerce/users/orders/:idorder
+
 format
 {
     "status":"PENDING",
     "item":[{"name":"sepeda","totalItem":"2"},{"name":"baju","totalItem":"3"}]
 }
 4.delete order(delete)
-localhost:8080/ecommerce/users/:id/orders/:idorder
-id in here is id user
+localhost:8080/ecommerce/users/orders/:idorder
+
 
 5.change status(patch)
-localhost:8080/ecommerce/users/:id/orders/:idorder/:status
-id in here is id user
+localhost:8080/ecommerce/users/orders/:idorder/:status
 status is enum use paid or pending 
 
 

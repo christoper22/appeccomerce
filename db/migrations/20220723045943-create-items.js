@@ -9,24 +9,20 @@ module.exports = {
           type: Sequelize.INTEGER,
           autoIncrement: true,
           primaryKey: true,
-          unique: true,
-          allowNull: false
+          unique: true
         },
         name: {
           type: Sequelize.STRING,
-          allowNull: false
+          unique: true
         },
         codes: {
-          type: Sequelize.STRING,
-          allowNull: false
+          type: Sequelize.STRING
         },
         price: {
-          type: Sequelize.INTEGER,
-          allowNull: false
+          type: Sequelize.INTEGER
         },
         totalItems: {
-          type: Sequelize.INTEGER,
-          allowNull: false
+          type: Sequelize.INTEGER
         },
         createdAt: {
           type: Sequelize.DATE

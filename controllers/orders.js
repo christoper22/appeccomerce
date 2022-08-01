@@ -3,7 +3,8 @@ const { Users, Items, Orders, OrderItem, connection } = require('../db/models/in
 
 const getOrders = async (req, res, next) => {
    try {
-    const user = await Users.findByPk(req.params.id)
+       const user = await Users.findByPk(req.userAfterVerifikation)
+       console.log(req.userAfterVerifikation)
     // console.log(user)
     // if (!user) {
     //     return res.status(400).json({
@@ -43,7 +44,7 @@ const getOrders = async (req, res, next) => {
 
 const addOrder = async (req, res, next) => {
     try {
-        const user = await Users.findByPk(req.params.id)
+        const user = await Users.findByPk(req.userAfterVerifikation)
         // if (!user) {
         //     return res.status(400).json({
         //         message: 'user not found'
@@ -193,7 +194,7 @@ const updateOrder = async (req, res, next) => {
                 })
                 // console.log(order.totalPrice)
                 return res.status(201).json({
-                    message: 'success create Order',
+                    message: 'success Update Order',
                     data: {
                         orderId: order.id,
                         userId: order.userId,
@@ -228,12 +229,17 @@ const deleteOrder = async (req, res, next) => {
         // } else {
         const idOrder = req.params.idorder
         const order = await Orders.findByPk(idOrder)
+        console.log(order.status)
         if (!order) {
             return res.status(400).json({
                 message: 'order not found'
             })
+        } else if (order.status === "PAID") {
+            return res.status(200).json({
+                message: 'order already paid'
+            })
         } else {
-            console.log(order)
+            // console.log(order)
             const orderItem = await OrderItem.findAll({ where: { orderId: order.id } })
             if (orderItem == null) {
                 order.destroy()

@@ -1,5 +1,5 @@
 require('dotenv').config()
-const { Users,Roles, Orders, OrderItem,Items } = require('../db/models/index')
+const { Users, Roles, Orders, OrderItem, Items } = require('../db/models/index')
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
@@ -7,7 +7,7 @@ const getUsers = async (req, res, next) => {
     try {
         const body = req.body
         // console.log(body)
-        const searchUser = await Users.findOne({ where: { userName: req.body.userName },include:[{model:Roles,as:"role",attributes:['name']}]})
+        const searchUser = await Users.findOne({ where: { userName: req.body.userName }, include: [{ model: Roles, as: "role", attributes: ['name'] }] })
         // console.log(searchUser)
 
         // console.log(searchUser.userid)
@@ -22,22 +22,22 @@ const getUsers = async (req, res, next) => {
 
         if (matchPassword === true) {
             const token = jwt.sign(
-                { userName: searchUser.userName},
+                { userName: searchUser.userName },
                 process.env.Secret_Token,
                 // {
                 //   expiresIn: "2h",
                 // }
-              );
-             
+            );
+
             // console.log(token)
-            return res.header('secret-token',token).status(201).json({
+            return res.header('secret-token', token).status(201).json({
                 message: `hello ${searchUser.name},succes login`,
                 data: {
                     userName: searchUser.userName,
                     email: searchUser.email,
                     phone: searchUser.phone,
                     role: searchUser.role.name,
-                    token:token
+                    token: token
                 }
             })
         } else {
@@ -56,7 +56,7 @@ const getUsers = async (req, res, next) => {
 const addUser = async (req, res, next) => {
     try {
         const body = req.body
-        const role = await Roles.findOne({where: { name:body.role}})
+        const role = await Roles.findOne({ where: { name: body.role } })
         // const isUserExist = await Users.findOne({
         //     where: {
         //         userName: body.userName
@@ -110,30 +110,32 @@ const addUser = async (req, res, next) => {
 
 const updateUser = async (req, res, next) => {
     try {
-        const user = await Users.findByPk(req.params.id)
+        const user = await Users.findByPk(req.userAfterVerifikation)
+
         // if (!user) {
         //     return res.status(400).json({
         //         message: 'user not found'
         //     })
         // } else {
-            const body = req.body
-            const hasedPassword = bcrypt.hashSync(body.password, 12)
-            const newPassword = { "password": hasedPassword }
-            const newBody = { ...body, ...newPassword }
-            // console.log(newBody)
-            await user.set({ ...user, ...newBody })
-            await user.save()
+        const body = req.body
+        const role = await Roles.findOne({ where: { name: body.role } })
+        const hasedPassword = bcrypt.hashSync(body.password, 12)
+        const newBody = { ...body, password: hasedPassword, roleId: role.id }
+        // console.log(newBody)
+        await user.set({ ...user, ...newBody })
+        await user.save()
 
-            // console.log(user)
-            return res.status(200).json({
-                message: 'user berhasil diupdate',
-                data: {
-                    username: user.userName,
-                    name: user.name,
-                    email: user.email,
-                    phone: user.phone
-                }
-            })
+        // console.log(user)
+        return res.status(200).json({
+            message: 'user berhasil diupdate',
+            data: {
+                username: user.userName,
+                name: user.name,
+                email: user.email,
+                phone: user.phone,
+                role: role.name
+            }
+        })
         // }
     } catch (error) {
         next(error)
@@ -143,30 +145,30 @@ const updateUser = async (req, res, next) => {
 
 const deleteUser = async (req, res, next) => {
     try {
-        const user = await Users.findByPk(req.params.id)
+        const user = await Users.findByPk(req.userAfterVerifikation)
         // if (!user) {
         //     return res.status(400).json({
         //         message: 'user not found'
         //     })
         // } else {
-        const findOrders = await Orders.findAll({ where: { userId: user.id ,status:"PENDING"} })
-        for (let order of findOrders) { 
+        const findOrders = await Orders.findAll({ where: { userId: user.id, status: "PENDING" } })
+        for (let order of findOrders) {
             const orderItemDelete = await OrderItem.findAll({ where: { orderId: order.id } })
-                for (let orderItem of orderItemDelete) {
-                    const item = await Items.findOne({ where: { id: orderItem.itemId } })
-                    const updateTotalItem = (item.totalItems + orderItem.totalItem)
-                    // console.log(updateTotalItem)
-                    // console.log(typeof (item.totalItems))
-                    // console.log(typeof (orderItem.totalItem))
-                    item.update({ totalItems: updateTotalItem })
-                    orderItem.destroy()
+            for (let orderItem of orderItemDelete) {
+                const item = await Items.findOne({ where: { id: orderItem.itemId } })
+                const updateTotalItem = (item.totalItems + orderItem.totalItem)
+                // console.log(updateTotalItem)
+                // console.log(typeof (item.totalItems))
+                // console.log(typeof (orderItem.totalItem))
+                item.update({ totalItems: updateTotalItem })
+                orderItem.destroy()
             }
             order.destroy()
-         }
-            user.destroy()
-            return res.status(200).json({
-                message: 'success remove user'
-            })
+        }
+        user.destroy()
+        return res.status(200).json({
+            message: 'success remove user'
+        })
         // }
 
     } catch (error) {
