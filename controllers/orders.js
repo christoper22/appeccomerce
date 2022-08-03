@@ -1,10 +1,13 @@
 const { Users, Items, Orders, OrderItem, connection } = require('../db/models/index')
+const { formatDateCustom } = require('../utils/helper')
+
 
 
 const getOrders = async (req, res, next) => {
    try {
        const user = await Users.findByPk(req.userAfterVerifikation)
-       console.log(req.userAfterVerifikation)
+    //    console.log(req.userAfterVerifikation)
+      
     // console.log(user)
     // if (!user) {
     //     return res.status(400).json({
@@ -23,11 +26,22 @@ const getOrders = async (req, res, next) => {
         ,
         attributes: { exclude: ['userId', 'deletedAt'] }
     })
-    // console.log(orders)
-    if (orders.length === 0 ) {
+    // //    console.log(orders)
+    //    await Promise.all(
+    //     orders.map(async(order) => {
+    //         const newTime = formatDateCustom(order.createdAt, 'ddd,DD MMMM yyyy | HH.mm')
+    //         console.log(newTime)
+    //         order.created = newTime
+    //         console.log(order.created)
+    //     })
+    //    )
+    
 
+    //    formatDateCustom(new Date(),'ddd, MMMM yyyy | HH.mm')
+    if (orders.length === 0 ) {
+        
         return res.status(201).json({
-            message: 'dont have order',
+            message: 'dont have order'
         })
     }
 
@@ -38,6 +52,7 @@ const getOrders = async (req, res, next) => {
     })
     // }
    } catch (error) {
+    console.log(error)
     next(error)
    }
 }
