@@ -27,14 +27,37 @@ const getOrders = async (req, res, next) => {
         attributes: { exclude: ['userId', 'deletedAt'] }
     })
     // //    console.log(orders)
-    //    await Promise.all(
-    //     orders.map(async(order) => {
-    //         const newTime = formatDateCustom(order.createdAt, 'ddd,DD MMMM yyyy | HH.mm')
-    //         console.log(newTime)
-    //         order.created = newTime
-    //         console.log(order.created)
-    //     })
-    //    )
+    const formatOrders=[]
+       await Promise.all(
+        orders.map(async(order) => {
+            const newCreateTime = formatDateCustom(order.createdAt, 'ddd,DD MMMM yyyy | HH.mm')
+            const newUpdateTime = formatDateCustom(order.updateAt, 'ddd,DD MMMM yyyy | HH.mm')
+            // console.log(newCreateTime)
+            const items = order.order
+            const itemYouOrder = []
+            items.map(async (item) => {
+                itemYouOrder.push({
+                    nameItem: item.item.name,
+                    codes: item.item.codes,
+                    price: item.price,
+                    totalItem: item.totalItem,
+                    price: item.price,
+                    totalPrice: item.total,
+                    stocks: item.item.totalItems
+                    
+                })
+            })
+            formatOrders.push({
+                user:order.user.userName,
+                orderNo: order.id,
+                order: itemYouOrder,
+                totalPrice: order.totalPrice,
+                status: order.status,
+                createdAt: newCreateTime,
+                updatedAt: newUpdateTime
+            })
+        })
+       )
     
 
     //    formatDateCustom(new Date(),'ddd, MMMM yyyy | HH.mm')
@@ -45,10 +68,11 @@ const getOrders = async (req, res, next) => {
         })
     }
 
+   
     // console.log(orders[0].user.userName)
     return res.status(201).json({
         message: 'all order',
-        data: orders
+        data: formatOrders
     })
     // }
    } catch (error) {
