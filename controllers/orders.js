@@ -84,7 +84,7 @@ const addOrder = async (req, res, next) => {
             // console.log(order)
             const totalPrice = []
             for (let i = 0; i < items.length; i++) {
-                const item = await Items.findOne({ where: { name: items[i].name } }, { transaction: t })//search all items
+                const item = await Items.findOne({ where: { name: items[i].name } })//search all items
                 if (!item) {
                     return res.status(201).json({
                         message: 'item not found',
@@ -106,7 +106,14 @@ const addOrder = async (req, res, next) => {
                 const totalPriceOrder = orderItem.price * orderItem.totalItem
                 totalPrice.push(totalPriceOrder)//push item price to total price
                 const updateTotalItem = item.totalItems - orderItem.totalItem
-                item.update({ totalItems: updateTotalItem })
+                if (updateTotalItem < 0) {
+                    t.rollback()
+                    return res.status(201).json({
+                        message: 'item out of stocks',
+                    })
+                }
+                await item.update({ totalItems: updateTotalItem },{transaction:t})
+                
             }
             // console.log(totalPrice)
             await t.commit()
@@ -167,6 +174,7 @@ const updateOrder = async (req, res, next) => {
                 })
             } else {
                 // console.log(order)
+                const t = await connection.transaction()
                 const orderItemDelete = await OrderItem.findAll({ where: { orderId: idOrder } })
                 for (let orderItem of orderItemDelete) {
                     const item = await Items.findOne({ where: { id: orderItem.itemId } })
@@ -174,8 +182,8 @@ const updateOrder = async (req, res, next) => {
                     // console.log(updateTotalItem)
                     // console.log(typeof (item.totalItems))
                     // console.log(typeof (orderItem.totalItem))
-                    item.update({ totalItems: updateTotalItem })
-                    orderItem.destroy()
+                    item.update({ totalItems: updateTotalItem },{transaction:t})
+                    orderItem.destroy({transaction:t})
                 }
 
                 const totalPrice = []
@@ -189,12 +197,19 @@ const updateOrder = async (req, res, next) => {
                         price: item.price,
                         totalItem: items[i].totalItem,
                         total:totalPriceItem
-                    }) //create order item
+                    },{transaction:t}) //create order item
                     const totalPriceOrder = orderItem.price * orderItem.totalItem
-                    await totalPrice.push(totalPriceOrder)//push item price to total price
+                    totalPrice.push(totalPriceOrder)//push item price to total price
                     const updateTotalItem = item.totalItems - orderItem.totalItem
-                    item.update({ totalItems: updateTotalItem })
+                    if (updateTotalItem < 0) {
+                        t.rollback()
+                        return res.status(201).json({
+                            message: 'item out of stocks',
+                        })
+                    }
+                    await item.update({ totalItems: updateTotalItem },{transaction:t})
                 }
+                await t.commit()
                 // console.log(totalPrice)
                 let sum = 0;
 
