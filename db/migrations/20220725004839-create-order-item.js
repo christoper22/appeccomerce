@@ -1,63 +1,60 @@
-'use strict';
+"use strict";
 
 module.exports = {
-  async up (queryInterface, Sequelize) {
-     await queryInterface.createTable(
-      'orderItems',
-      { 
-        id: {
-          type: Sequelize.INTEGER,
-          autoIncrement: true,
-          primaryKey: true,
-          unique: true,
-          allowNull: false
+  async up(queryInterface, Sequelize) {
+    await queryInterface.createTable("orderItems", {
+      id: {
+        type: Sequelize.INTEGER,
+        autoIncrement: true,
+        primaryKey: true,
+        unique: true,
+        allowNull: false,
+      },
+      orderId: {
+        type: Sequelize.INTEGER,
+        references: {
+          model: "orders",
+          key: "id",
         },
-        orderId: {
-          type: Sequelize.INTEGER,
-          references: {
-            model: "orders",
-            key:"id"
-          },
-          onUpdate: "CASCADE",
-          onDelete: "CASCADE",
-          allowNull: false
+        onUpdate: "CASCADE",
+        onDelete: "CASCADE",
+        allowNull: false,
+      },
+      itemId: {
+        type: Sequelize.INTEGER,
+        references: {
+          model: "items",
+          key: "id",
         },
-        itemId: {
-          type: Sequelize.INTEGER,
-          references: {
-            model: "items",
-            key:"id"
-          },
-          onUpdate: "CASCADE",
-          onDelete: "CASCADE",
-          allowNull: false
-        },
-        price: {
-          type: Sequelize.INTEGER,
-          allowNull: false
-        },
-        totalItem: {
-          type: Sequelize.INTEGER,
-          allowNull: false
-        },
-        total: {
-          type: Sequelize.INTEGER,
-          allowNull: false
-        },
-        createdAt: {
-          type: Sequelize.DATE
-        },
-        updatedAt: {
-          type: Sequelize.DATE
-        },
-        deletedAt: {
-          type: Sequelize.DATE
-        }
-      }
-    );
+        onUpdate: "CASCADE",
+        onDelete: "CASCADE",
+        allowNull: false,
+      },
+      price: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+      },
+      totalItem: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+      },
+      total: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+      },
+      createdAt: {
+        type: Sequelize.DATE,
+      },
+      updatedAt: {
+        type: Sequelize.DATE,
+      },
+      deletedAt: {
+        type: Sequelize.DATE,
+      },
+    });
   },
 
-  async down (queryInterface, Sequelize) {
-    await queryInterface.dropTable('items');
-  }
+  async down(queryInterface, Sequelize) {
+    await queryInterface.dropTable("orderItems");
+  },
 };
