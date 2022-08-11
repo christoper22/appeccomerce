@@ -1,9 +1,9 @@
-const { Items } = require("../db/models/index");
+const { Items } = require('../db/models/index');
 
 const getItems = async (req, res, next) => {
   try {
     const allItems = await Items.findAll({
-      attributes: ["name", "codes", "price", "totalItems"],
+      attributes: ['name', 'codes', 'price', 'totalItems'],
     });
 
     // console.log(allItems)
@@ -87,14 +87,14 @@ const updateItem = async (req, res, next) => {
     const item = await Items.findByPk(req.params.iditem);
     if (!item) {
       return res.status(400).json({
-        message: "item not found",
+        message: 'item not found',
       });
     } else {
       const body = req.body;
       await item.set({ ...item, ...body });
       await item.save();
       return res.status(200).json({
-        message: "item berhasil diupdate",
+        message: 'item berhasil diupdate',
         Data: {
           name: item.name,
           codes: item.code,
@@ -120,12 +120,12 @@ const deleteItem = async (req, res, next) => {
     const item = await Items.findByPk(req.params.iditem);
     if (!item) {
       return res.status(400).json({
-        message: "item not found",
+        message: 'item not found',
       });
     } else {
       item.destroy();
       return res.status(200).json({
-        message: "success remove items",
+        message: 'success remove items',
       });
     }
     // }

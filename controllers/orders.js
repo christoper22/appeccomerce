@@ -4,8 +4,8 @@ const {
   Orders,
   OrderItem,
   connection,
-} = require("../db/models/index");
-const { formatDateCustom } = require("../utils/helper");
+} = require('../db/models/index');
+const { formatDateCustom } = require('../utils/helper');
 
 const getOrders = async (req, res, next) => {
   try {
@@ -24,19 +24,19 @@ const getOrders = async (req, res, next) => {
       include: [
         {
           model: OrderItem,
-          as: "order",
+          as: 'order',
           include: [
             {
               model: Items,
-              as: "item",
-              attributes: ["name", "codes", "totalItems"],
+              as: 'item',
+              attributes: ['name', 'codes', 'totalItems'],
             },
           ],
-          attributes: { exclude: ["id", "orderId", "createdAt", "updatedAt"] },
+          attributes: { exclude: ['id', 'orderId', 'createdAt', 'updatedAt'] },
         },
-        { model: Users, as: "user", attributes: ["userName"] },
+        { model: Users, as: 'user', attributes: ['userName'] },
       ],
-      attributes: { exclude: ["userId", "deletedAt"] },
+      attributes: { exclude: ['userId', 'deletedAt'] },
     });
     // //    console.log(orders)
     const formatOrders = [];
@@ -44,11 +44,11 @@ const getOrders = async (req, res, next) => {
       orders.map(async (order) => {
         const newCreateTime = formatDateCustom(
           order.createdAt,
-          "ddd,DD MMMM yyyy | HH.mm"
+          'ddd,DD MMMM yyyy | HH.mm'
         );
         const newUpdateTime = formatDateCustom(
           order.updateAt,
-          "ddd,DD MMMM yyyy | HH.mm"
+          'ddd,DD MMMM yyyy | HH.mm'
         );
         // console.log(newCreateTime)
         const items = order.order;
@@ -79,13 +79,13 @@ const getOrders = async (req, res, next) => {
     //    formatDateCustom(new Date(),'ddd, MMMM yyyy | HH.mm')
     if (orders.length === 0) {
       return res.status(201).json({
-        message: "dont have order",
+        message: 'dont have order',
       });
     }
 
     // console.log(orders[0].user.userName)
     return res.status(201).json({
-      message: "all order",
+      message: 'all order',
       data: formatOrders,
     });
     // }
@@ -110,7 +110,7 @@ const addOrder = async (req, res, next) => {
 
     if (items.length === 0) {
       return res.status(201).json({
-        message: "add items",
+        message: 'add items',
       });
     } else {
       const t = await connection.transaction();
@@ -129,7 +129,7 @@ const addOrder = async (req, res, next) => {
         const item = await Items.findOne({ where: { name: items[i].name } }); //search all items
         if (!item) {
           return res.status(201).json({
-            message: "item not found",
+            message: 'item not found',
           });
         }
         const totalPriceItem = items[i].totalItem * item.price;
@@ -154,7 +154,7 @@ const addOrder = async (req, res, next) => {
         if (updateTotalItem < 0) {
           t.rollback();
           return res.status(201).json({
-            message: "item out of stocks",
+            message: 'item out of stocks',
           });
         }
         await item.update({ totalItems: updateTotalItem }, { transaction: t });
@@ -172,7 +172,7 @@ const addOrder = async (req, res, next) => {
       // console.log(order.totalPrice)
 
       return res.status(201).json({
-        message: "success create Order",
+        message: 'success create Order',
         data: {
           orderId: order.id,
           userId: order.userId,
@@ -201,7 +201,7 @@ const updateOrder = async (req, res, next) => {
     const order = await Orders.findByPk(idOrder);
     if (!order) {
       return res.status(400).json({
-        message: "order not found",
+        message: 'order not found',
       });
     } else {
       const body = req.body;
@@ -211,7 +211,7 @@ const updateOrder = async (req, res, next) => {
       // console.log(body)
       if (items.length === 0) {
         return res.status(201).json({
-          message: "add items",
+          message: 'add items',
         });
       } else {
         // console.log(order)
@@ -250,7 +250,7 @@ const updateOrder = async (req, res, next) => {
           if (updateTotalItem < 0) {
             t.rollback();
             return res.status(201).json({
-              message: "item out of stocks",
+              message: 'item out of stocks',
             });
           }
           await item.update(
@@ -273,7 +273,7 @@ const updateOrder = async (req, res, next) => {
         });
         // console.log(order.totalPrice)
         return res.status(201).json({
-          message: "success Update Order",
+          message: 'success Update Order',
           data: {
             orderId: order.id,
             userId: order.userId,
@@ -310,11 +310,11 @@ const deleteOrder = async (req, res, next) => {
     console.log(order.status);
     if (!order) {
       return res.status(400).json({
-        message: "order not found",
+        message: 'order not found',
       });
-    } else if (order.status === "PAID") {
+    } else if (order.status === 'PAID') {
       return res.status(200).json({
-        message: "order already paid",
+        message: 'order already paid',
       });
     } else {
       // console.log(order)
@@ -340,7 +340,7 @@ const deleteOrder = async (req, res, next) => {
       }
 
       return res.status(200).json({
-        message: "success remove order",
+        message: 'success remove order',
       });
     }
     // }
@@ -361,7 +361,7 @@ const statusChange = async (req, res, next) => {
     const order = await Orders.findByPk(idOrder);
     if (!order) {
       return res.status(400).json({
-        message: "order not found",
+        message: 'order not found',
       });
     } else {
       const statusChange = req.params.status.toUpperCase();

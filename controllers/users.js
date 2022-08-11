@@ -1,13 +1,13 @@
-require("dotenv").config();
+require('dotenv').config();
 const {
   Users,
   Roles,
   Orders,
   OrderItem,
   Items,
-} = require("../db/models/index");
-const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
+} = require('../db/models/index');
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
 const getUsers = async (req, res, next) => {
   try {
@@ -15,14 +15,14 @@ const getUsers = async (req, res, next) => {
     // console.log(body)
     const searchUser = await Users.findOne({
       where: { userName: req.body.userName },
-      include: [{ model: Roles, as: "role", attributes: ["name"] }],
+      include: [{ model: Roles, as: 'role', attributes: ['name'] }],
     });
     // console.log(searchUser)
 
     // console.log(searchUser.userid)
     if (searchUser == null) {
       return res.status(401).json({
-        message: "username notfound!!",
+        message: 'username notfound!!',
       });
     }
 
@@ -44,7 +44,7 @@ const getUsers = async (req, res, next) => {
 
       // console.log(token)
       return res
-        .header("secret-token", token)
+        .header('secret-token', token)
         .status(201)
         .json({
           message: `hello ${searchUser.name},succes login`,
@@ -58,7 +58,7 @@ const getUsers = async (req, res, next) => {
         });
     } else {
       return res.status(401).json({
-        message: "incorrect password",
+        message: 'incorrect password',
       });
     }
   } catch (error) {
@@ -108,7 +108,7 @@ const addUser = async (req, res, next) => {
 
     return res.status(200).json({
       code: 200,
-      message: "Success create user",
+      message: 'Success create user',
       data: {
         userName: user.userName,
         name: user.name,
@@ -140,7 +140,7 @@ const updateUser = async (req, res, next) => {
 
     // console.log(user)
     return res.status(200).json({
-      message: "user berhasil diupdate",
+      message: 'user berhasil diupdate',
       data: {
         username: user.userName,
         name: user.name,
@@ -164,7 +164,7 @@ const deleteUser = async (req, res, next) => {
     //     })
     // } else {
     const findOrders = await Orders.findAll({
-      where: { userId: user.id, status: "PENDING" },
+      where: { userId: user.id, status: 'PENDING' },
     });
     for (let order of findOrders) {
       const orderItemDelete = await OrderItem.findAll({
@@ -183,7 +183,7 @@ const deleteUser = async (req, res, next) => {
     }
     user.destroy();
     return res.status(200).json({
-      message: "success remove user",
+      message: 'success remove user',
     });
     // }
   } catch (error) {
