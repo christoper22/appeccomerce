@@ -32,10 +32,10 @@ const getUsers = async (req, res, next) => {
       searchUser.password
     );
     // console.log(matchPassword)
-
+    // console.log(searchUser.role.name);
     if (matchPassword === true) {
       const token = jwt.sign(
-        { userName: searchUser.userName },
+        { userName: searchUser.userName, role: searchUser.role.name },
         process.env.Secret_Token
         // {
         //   expiresIn: "2h",
