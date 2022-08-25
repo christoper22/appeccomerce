@@ -7,12 +7,14 @@ require('express-group-routes'); //express group install first npm
 const path = require('path');
 const app = express();
 const methodOverride = require('method-override'); //install first method override
+
 //router
 const userRouter = require('./routes/users');
 const itemRouter = require('./routes/items');
 const orderRouter = require('./routes/orders');
 //handler err
 const logger = require('./middleware/errorhandler/error');
+const passport = require('./lib/passport');
 // app.engine('ejs', ejsMate)
 
 app.set('view engine', 'ejs');
@@ -21,6 +23,7 @@ app.set('views', path.join(__dirname, 'views'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride('_method'));
+app.use(passport.initialize());
 
 app.group('/ecommerce', (router) => {
   router.use('/users', userRouter);

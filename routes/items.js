@@ -11,6 +11,8 @@ const validation = require('../middleware/validation/validationMiddleware');
 const addItemSchema = require('../middleware/validationJoi/addItem');
 const updateItemSchema = require('../middleware/validationJoi/updateItem');
 const roleValidation = require('../middleware/validation/authorization');
+const whoAmI = require('../middleware/validation/whoAmI');
+const passport = require('passport');
 
 router.get('/', getItems);
 router.post(
@@ -27,6 +29,13 @@ router.patch(
   validation(updateItemSchema),
   updateItem
 );
-router.delete('/:iditem', verifyToken, roleValidation('admin'), deleteItem);
+router.delete(
+  '/:iditem',
+  // verifyToken,
+  // roleValidation('admin'),
+  passport.authenticate('jwt', { session: false }),
+  whoAmI('admin'),
+  deleteItem
+);
 
 module.exports = router;
